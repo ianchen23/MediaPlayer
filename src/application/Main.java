@@ -1,6 +1,8 @@
 package application;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -8,12 +10,19 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import java.io.File;
+import java.net.MalformedURLException;
 
 public class Main extends Application {
 
+    Player player;
+    FileChooser fileChooser;
+
     @Override
-    public void start(Stage primaryStage){
+    public void start(final Stage primaryStage){
 
         MenuItem open = new MenuItem("Open");
         Menu file = new Menu("File");
@@ -22,8 +31,29 @@ public class Main extends Application {
         file.getItems().add(open);
         menu.getMenus().add(file);
 
-        Player player = new Player("file:///C:/Memento.2000.720p.BluRay.x264.YIFY.mp4");
-        Scene scene = new Scene(player, 1280, 528, Color.BLACK);
+        fileChooser = new FileChooser();
+
+        open.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                player.player.pause();
+                File file = fileChooser.showOpenDialog(primaryStage);
+                if (file != null) {
+                    try {
+                        player = new Player(file.toURI().toURL().toExternalForm());
+                        player.setTop(menu);
+                        Scene scene = new Scene(player,1280, 600, Color.BLACK);
+                        primaryStage.setScene(scene);
+                    } catch (MalformedURLException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        player = new Player("file:///C:/Memento.2000.720p.BluRay.x264.YIFY.mp4");
+        player.setTop(menu);
+        Scene scene = new Scene(player, 1280, 600, Color.BLACK);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
