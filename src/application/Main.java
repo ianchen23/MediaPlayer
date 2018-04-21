@@ -51,7 +51,7 @@ public class Main extends Application {
             }
         });
 
-        player = new Player("file:///C:/Memento.2000.720p.BluRay.x264.YIFY.mp4");
+        player = new Player("file:///C:/start.mp4");
         player.setTop(menu);
         Scene scene = new Scene(player, 1280, 600, Color.BLACK);
         primaryStage.setScene(scene);
